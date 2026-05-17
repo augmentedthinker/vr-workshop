@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>VR Workshop</title>
+    <meta name="description" content="Prototype WebXR homeroom for the OpenClaw VR Workshop." />
+    <link rel="stylesheet" href="src/styles/workshop.css" />
+    <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
+    <script src="src/components/workshop-scene.js"></script>
+  </head>
+  <body>
+    <div class="desktop-panel" id="desktopPanel">
+      <header>
+        <div>
+          <p class="eyebrow">VR Workshop Prototype 0</p>
+          <h1>Homeroom</h1>
+        </div>
+        <button type="button" id="collapsePanel" aria-label="Collapse panel">Hide</button>
+      </header>
+      <p>
+        Desktop: click the scene, then use WASD + mouse. Quest: open this page in the browser and use Enter VR.
+        The four doorways are physical passages into the first surrounding rooms.
+      </p>
+      <div class="jump-grid" aria-label="Room jump controls">
+        <button type="button" data-jump="home">Home</button>
+        <button type="button" data-jump="artifacts">Artifacts</button>
+        <button type="button" data-jump="projects">Projects</button>
+        <button type="button" data-jump="reflections">Reflections</button>
+        <button type="button" data-jump="notes">Notes</button>
+      </div>
+      <p class="status" id="roomStatus">Current room: Homeroom</p>
+    </div>
+
+    <button class="restore-panel" id="restorePanel" type="button">Map</button>
+
+    <a-scene vr-mode-ui="enabled: true" renderer="colorManagement: true; physicallyCorrectLights: true; antialias: true" background="color: #060914" workshop-room-tracker>
+      <a-assets>
+        <a-mixin id="panelText" text="align: center; color: #fff6e5; width: 4.4; wrapCount: 28"></a-mixin>
+      </a-assets>
+
+      <a-entity light="type: ambient; color: #dbe7ff; intensity: 0.55"></a-entity>
+      <a-entity light="type: directional; color: #ffe1b8; intensity: 0.82" position="-2 6 3"></a-entity>
+      <a-entity light="type: point; color: #8db8ff; intensity: 1.2; distance: 12" position="0 2.4 0"></a-entity>
+
+      <a-entity id="cameraRig" position="0 0 2.8" movement-controls="speed: 0.16; fly: false">
+        <a-entity id="playerCamera" camera look-controls="pointerLockEnabled: true" position="0 1.6 0">
+          <a-cursor fuse="false" raycaster="objects: .interactable" material="color: #ffb86b; shader: flat"></a-cursor>
+        </a-entity>
+        <a-entity laser-controls="hand: left" raycaster="objects: .interactable; far: 12" line="color: #95b8ff"></a-entity>
+        <a-entity laser-controls="hand: right" raycaster="objects: .interactable; far: 12" line="color: #ffb86b"></a-entity>
+      </a-entity>
+
+      <a-entity workshop-room="name: Homeroom; width: 8; depth: 8; color: #18223d; x: 0; z: 0; doors: north,east,south,west"></a-entity>
+      <a-entity workshop-room="name: Artifacts; width: 8; depth: 7; color: #24304d; x: 0; z: -10; doors: south"></a-entity>
+      <a-entity workshop-room="name: Projects; width: 8; depth: 7; color: #1e3440; x: 10; z: 0; doors: west"></a-entity>
+      <a-entity workshop-room="name: Notes; width: 8; depth: 7; color: #2f2844; x: 0; z: 10; doors: north"></a-entity>
+      <a-entity workshop-room="name: Reflections; width: 8; depth: 7; color: #33283a; x: -10; z: 0; doors: east"></a-entity>
+
+      <a-entity workshop-corridor="direction: north"></a-entity>
+      <a-entity workshop-corridor="direction: east"></a-entity>
+      <a-entity workshop-corridor="direction: south"></a-entity>
+      <a-entity workshop-corridor="direction: west"></a-entity>
+
+      <a-entity id="openclawPresence" position="0 1.45 0" workshop-orb>
+        <a-sphere radius="0.34" segments-width="32" segments-height="16" material="color: #95b8ff; emissive: #5f8dff; emissiveIntensity: 1.2; transparent: true; opacity: 0.86"></a-sphere>
+        <a-torus radius="0.56" radius-tubular="0.012" rotation="90 0 0" material="color: #ffb86b; emissive: #ff9b3d; emissiveIntensity: 0.9; transparent: true; opacity: 0.82"></a-torus>
+      </a-entity>
+
+      <a-entity position="0 2.55 -3.72" rotation="0 0 0" mixin="panelText" text="value: ARTIFACTS&#10;polished things we made"></a-entity>
+      <a-entity position="3.72 2.55 0" rotation="0 -90 0" mixin="panelText" text="value: PROJECTS&#10;active build loops"></a-entity>
+      <a-entity position="0 2.55 3.72" rotation="0 180 0" mixin="panelText" text="value: NOTES&#10;continuity and trail"></a-entity>
+      <a-entity position="-3.72 2.55 0" rotation="0 90 0" mixin="panelText" text="value: REFLECTIONS&#10;lessons and signal"></a-entity>
+
+      <a-entity class="interactable" workshop-jump="target: home" geometry="primitive: cylinder; radius: 0.38; height: 0.12" material="color: #ffb86b; emissive: #ff9d4b; emissiveIntensity: 0.4" position="0 0.08 2.3"></a-entity>
+      <a-entity position="0 0.36 2.3" mixin="panelText" text="value: stand here&#10;to reset; width: 2.4; wrapCount: 16"></a-entity>
+
+      <a-entity workshop-room-marker="room: artifacts; label: Artifacts Room; x: 0; z: -10"></a-entity>
+      <a-entity workshop-room-marker="room: projects; label: Projects Room; x: 10; z: 0"></a-entity>
+      <a-entity workshop-room-marker="room: notes; label: Notes Room; x: 0; z: 10"></a-entity>
+      <a-entity workshop-room-marker="room: reflections; label: Reflections Room; x: -10; z: 0"></a-entity>
+
+      <a-sky color="#070b18"></a-sky>
+    </a-scene>
+  </body>
+</html>

@@ -90,6 +90,25 @@ Research and planning inputs live under `docs/`:
 
 The OpenClaw Workshop remains the archive and planning surface. This repo is for the actual WebXR build.
 
+## Current Prototype
+
+The first runnable prototype is now index.html.
+
+It contains:
+
+- a central Homeroom cube space;
+- four actual wall doorways leading through short corridors;
+- adjacent Artifacts, Projects, Reflections, and Notes rooms;
+- a nonhuman OpenClaw orb placeholder in the center;
+- desktop browser controls for inspection without the headset;
+- A-Frame/WebXR support for opening in Quest Browser.
+
+Desktop inspection:
+
+Run python3 -m http.server 8080, then open http://localhost:8080.
+
+Desktop controls: click into the scene, then use WASD and mouse look. The overlay buttons can jump to rooms for quick inspection.
+
 ## Boundary
 
 Start small. Do not build a platform before the room works.
